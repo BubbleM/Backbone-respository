@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Model</title>
+</head>
+<body>
+
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/underscore.js"></script>
+<script type="text/javascript" src="js/backbone.js"></script>
+<script type="text/javascript">
+(function ($) {
+  var Man = Backbone.Model.extend({
+    initialize: function () {
+      alert('Hey, you create me!');
+      // 初始化时绑定监听
+      this.bind('change:name',function () {
+        var name = this.get('name');
+        alert("你改变了name属性为: " + name);
+      });
+    },
+    defaults:{ // 设置对象属性默认值 注意s defaults
+      name:'张三',
+      age:'38'
+    },
+    aboutMe: function () { // 定义对象中的方法，就是增加一个新的属性，值是一个function
+      return `我叫${this.get('name')},我今年${this.get('age')}岁!`;
+    }
+  });
+  var man = new Man();
+//  alert(man.get('name'));
+  man.set({name:'the6fire', age:'10'}); // 赋值时定义对象属性 触发绑定的change事件
+//  alert(man.get('name'));
+//  alert(man.aboutMe()); // 对象中方法的调用
+})(jQuery);
+</script>
+</body>
+</html>
