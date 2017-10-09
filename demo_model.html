@@ -17,15 +17,23 @@
   var Man = Backbone.Model.extend({
     initialize: function () {
       alert('Hey, you create me!');
-      // 初始化时绑定监听
+      // 初始化时绑定监听,change事件会先于validate发生
       this.bind('change:name',function () {
         var name = this.get('name');
         alert("你改变了name属性为: " + name);
+      });
+      this.bind('invalid',function (model,error) {
+        alert(error);
       });
     },
     defaults:{ // 设置对象属性默认值 注意s defaults
       name:'张三',
       age:'38'
+    },
+    validate: function (attributes) {
+      if (attributes.name == ''){
+        return "name不能为空!";
+      }
     },
     aboutMe: function () { // 定义对象中的方法，就是增加一个新的属性，值是一个function
       return `我叫${this.get('name')},我今年${this.get('age')}岁!`;
@@ -36,6 +44,14 @@
   man.set({name:'the6fire', age:'10'}); // 赋值时定义对象属性 触发绑定的change事件
 //  alert(man.get('name'));
 //  alert(man.aboutMe()); // 对象中方法的调用
+  
+  // 这种方式添加错误处理也行
+/*  man.on('invalid',function (model, error) {
+    alert(error);
+  });*/
+  man.set({name:''}); // 默认set时不进行验证
+//  man.set({name:''},{'validate':true}); // 手动触发验证，set时会触发
+  man.save(); // sava时触发验证。 根据验证规则，弹出错误提示。
 })(jQuery);
 </script>
 </body>
