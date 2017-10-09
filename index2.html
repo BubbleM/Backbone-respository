@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script type="text/javascript" src="js/underscore.js"></script>
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/backbone.js"></script>
+
+<script type="text/javascript">
+var ToDoItem = Backbone.Model.extend({});
+var toDoItem = new ToDoItem({
+  'title': 'task1',
+  'description': 'description1'
+});
+
+// on 是侦听事件
+toDoItem.on('change', function () { // set()可以触发change回调事件
+  // 如果给toDoItem.set('title','hello',{slient:true}); 则不会触发change
+  console.log(this.changed); // this.changed 显示哪些属性发生了变化
+  if (this.hasChanged('title')) {
+    console.log('title changed!');
+  } else {
+    console.log('title not changed!');
+  }
+});
+
+// 可以用trigger()直接触发事件 toDoItem.trigger('change');
+// off()取消侦听
+// once()
+var toDoItem2 = new ToDoItem();
+toDoItem2.listenTo(toDoItem, 'change:title', function () {
+  // this is toDoItem2
+})
+</script>
+</body>
+</html>
