@@ -20,19 +20,27 @@
 <script type="text/javascript">
   (function ($) {
     var SearchView = Backbone.View.extend({
+      el: "#search_container",
       initialize: function () {
-        alert("init a SearchView");
+        this.render({search_label: "搜索渲染"});
       },
       render: function (context) {
         // 使用underscore这个库,来编译模板
         var template = _.template($('#search_template').html());
         // 加载模板到对应的el属性中
         $(this.el).html(template(context));
+      },
+      events: {
+        // 定义类型为button的input标签的点击事件,触发函数doSearch
+        'click input[type=button]': "doSearch"
+      },
+      doSearch: function (event) {
+        alert("search for " + $("#search_input").val());
       }
     });
     // 每个View都会有el这个属性,如果没有显示声明,Backbone会默认构造一个,表示一个空的div元素
-    var searchView = new SearchView({el: $("#search_container")});
-    searchView.render({search_label: "搜索渲染"}); // 注意在模板中定义的所有变量必须在render的时候传递参数过去，不然就会报错
+    var searchView = new SearchView();
+//    searchView.render({search_label: "搜索渲染"}); // 注意在模板中定义的所有变量必须在render的时候传递参数过去，不然就会报错
   })(jQuery);
 </script>
 </body>
