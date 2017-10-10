@@ -21,7 +21,7 @@ $(function(){
       };
     },
 
-    // Toggle the `done` state of this todo item.
+    // 设置任务完成状态
     toggle: function() {
       this.save({done: !this.get("done")});
     }
@@ -30,12 +30,17 @@ $(function(){
 
   // Todo Collection
   // ---------------
-
+  /*collection的主要功能有以下几个：
+  * 1. 获取完成的任务
+  * 2. 获取未完成的任务
+  * 3. 获取下一个要插入数据的序号
+  * 4. 按序存放Todo对象
+  * */
   // The collection of todos is backed by *localStorage* instead of a remote
   // server.
   var TodoList = Backbone.Collection.extend({
 
-    // Reference to this collection's model.
+    // 设置Collection的模型为Todo
     model: Todo,
 
     // Save all of the todo items under the `"todos-backbone"` namespace.
@@ -55,10 +60,10 @@ $(function(){
     // GUID in the database. This generates the next order number for new items.
     nextOrder: function() {
       if (!this.length) return 1;
-      return this.last().get('order') + 1;
+      return this.last().get('order') + 1; // last获取collection中最后一个元素
     },
 
-    // Todos are sorted by their original insertion order.
+    // Backbone内置属性,指明collection的排序规则
     comparator: 'order'
 
   });
@@ -68,14 +73,18 @@ $(function(){
 
   // Todo Item View
   // --------------
-
+  /*
+  * 使用两个View,将对数据的操作和对页面的操作进行分离,即TodoView和AppView
+  * 前者的作用是对把Model中的数据渲染到模板中
+  * 后者是对已经渲染好的数据进行处理
+  * */
   // The DOM element for a todo item...
   var TodoView = Backbone.View.extend({
 
-    //... is a list tag.
+    //这个标签的作用是,把template模板中获取到的html代码放到这个标签中
     tagName:  "li",
 
-    // Cache the template function for a single item.
+    // 获取一个任务条目的模板,缓吨到这个属性上
     template: _.template($('#item-template').html()),
 
     // The DOM events specific to an item.
@@ -95,7 +104,7 @@ $(function(){
       this.listenTo(this.model, 'destroy', this.remove);
     },
 
-    // Re-render the titles of the todo item.
+    // 渲染todo中的数据到item-template中，然后返回对自己的引用this
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
       this.$el.toggleClass('done', this.model.get('done'));
@@ -139,7 +148,7 @@ $(function(){
 
   // The Application
   // ---------------
-
+  /*AppView功能是显示所有任务列表,显示整体的列表状态(完成多少,未完成多少)*/
   // Our overall **AppView** is the top-level piece of UI.
   var AppView = Backbone.View.extend({
 
